@@ -18,6 +18,7 @@ from transformers import AutoTokenizer, AutoModelForQuestionAnswering, pipeline
 
 qa_tokenizer = AutoTokenizer.from_pretrained("ktrapeznikov/albert-xlarge-v2-squad-v2")
 qa_model = AutoModelForQuestionAnswering.from_pretrained("ktrapeznikov/albert-xlarge-v2-squad-v2")
+#This is ALBERT fine-tuned for SQuAD 2.0 — includes "no answer" cases
 
 
 def get_answer(question, text):  # Code taken from https://huggingface.co/transformers/task_summary.html

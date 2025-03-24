@@ -24,7 +24,7 @@ qg_model = AutoModelWithLMHead.from_pretrained("mrm8488/t5-base-finetuned-questi
 nlp = spacy.load("en_core_web_sm")
 
 
-def get_answer_candidates(text):
+def get_answer_candidates(text):# get all possible answers from the text, including named entities and noun chunks
     doc = nlp(text)
     candidates = [ent.text for ent in list(doc.ents)]
     noun_chunks = list(doc.noun_chunks)
@@ -49,15 +49,19 @@ def get_answer_candidates(text):
 #     return candidates
 
 
-def get_question_greedy(answer, context, max_length=128):
+def get_question_greedy(answer, context, max_length=128): # generate all possible questions and return the first one
     input_text = "answer: %s  context: %s </s>" % (answer, context)
-    features = qg_tokenizer([input_text], return_tensors='pt')
+    features = qg_tokenizer([input_text], return_tensors='pt') # Tokenize the input text
 
     output = qg_model.generate(input_ids=features['input_ids'], attention_mask=features['attention_mask'],
                                max_length=max_length)
 
     question = qg_tokenizer.decode(output[0]).replace("question: ", "", 1)
     return question
+# Example: Barack Obama was born in Hawaii in 1961.
+# Enetity: Barack Obama, Hawaii, 1961
+# Noun Chunks: Barack Obama, Hawaii, 1961
+# Number of questions: 3
 
 
 def get_questions_beam(answer, context, max_length=128, beam_size=5, num_return=5):
@@ -88,3 +92,5 @@ def get_questions_sample(answer, context, max_length=128, top_k=50, top_p=0.95, 
         all_questions.append(qg_tokenizer.decode(sampled, skip_special_tokens=True).replace("question: ", "", 1))
 
     return all_questions
+# 50 per cand, choose max 5 per cand if method is mult
+# if it's single, then it would be 1 per cand 

@@ -29,7 +29,7 @@ NO_NLI = 'NO_NLI'
 NO_Q = -1
 ENTAILMENT_SCORE = 1
 CONTRADICTION_SCORE = 0
-NEUTRAL_SCORE = 0.5
+NEUTRAL_SCORE = 0.4
 
 
 def get_e2e_nli_score(response, knowledge):
